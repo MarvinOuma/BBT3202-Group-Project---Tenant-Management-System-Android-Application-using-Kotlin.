@@ -6,14 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.example.tenantmanagementsystemgroupa.R
-import com.example.tenantmanagementsystemgroupa.data.repository.TenantRepository
 import com.example.tenantmanagementsystemgroupa.databinding.FragmentDashboardBinding
+import com.example.tenantmanagementsystemgroupa.ui.viewmodel.TenantViewModel
 
 class DashboardFragment : Fragment() {
     private var _binding: FragmentDashboardBinding? = null
     private val binding get() = _binding!!
+    private val viewModel: TenantViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,10 +35,8 @@ class DashboardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         logLifecycle("onViewCreated")
 
-        val tenantCount = TenantRepository.tenants.size
-        val totalRent = TenantRepository.totalRent()
-        binding.tenantCountTextView.text = getString(R.string.tenant_count, tenantCount)
-        binding.totalRentTextView.text = getString(R.string.total_rent, totalRent)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
         binding.addTenantButton.setOnClickListener {
             val action = DashboardFragmentDirections.actionDashboardFragmentToAddTenantFragment()
