@@ -18,13 +18,11 @@ abstract class TenantDatabase : RoomDatabase() {
 
         fun getDatabase(context: Context): TenantDatabase {
             return INSTANCE ?: synchronized(this) {
-                val database = Room.databaseBuilder(
+                INSTANCE ?: Room.databaseBuilder(
                     context.applicationContext, // the whole app, not one screen
                     TenantDatabase::class.java,
                     "tenant_database" // the file name on the phone
-                ).build()
-                INSTANCE = database
-                database
+                ).build().also { INSTANCE = it }
             }
         }
     }

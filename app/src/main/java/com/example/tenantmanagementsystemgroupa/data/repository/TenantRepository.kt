@@ -1,16 +1,13 @@
 package com.example.tenantmanagementsystemgroupa.data.repository
 
+import androidx.lifecycle.LiveData
+import com.example.tenantmanagementsystemgroupa.data.local.TenantDao
 import com.example.tenantmanagementsystemgroupa.data.model.Tenant
 
-// The fragments share one list, which lasts only while the app process lives.
-object TenantRepository {
-    val tenants = mutableListOf<Tenant>()
+class TenantRepository(private val tenantDao: TenantDao) {
+    val tenants: LiveData<List<Tenant>> = tenantDao.getAllTenants()
 
-    fun addTenant(tenant: Tenant) {
-        tenants.add(tenant)
-    }
-
-    fun totalRent(): Double {
-        return tenants.sumOf { it.rent.toDoubleOrNull() ?: 0.0 }
+    suspend fun addTenant(tenant: Tenant) {
+        tenantDao.insertTenant(tenant)
     }
 }
