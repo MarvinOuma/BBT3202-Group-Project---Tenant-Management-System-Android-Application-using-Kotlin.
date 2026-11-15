@@ -7,15 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
-import com.example.tenantmanagementsystemgroupa.R
-import com.example.tenantmanagementsystemgroupa.data.repository.TenantRepository
 import com.example.tenantmanagementsystemgroupa.databinding.FragmentViewTenantsBinding
+import com.example.tenantmanagementsystemgroupa.ui.viewmodel.TenantViewModel
 
 class ViewTenantsFragment : Fragment() {
     private var _binding: FragmentViewTenantsBinding? = null
     private val binding get() = _binding!!
     private val args: ViewTenantsFragmentArgs by navArgs()
+    private val viewModel: TenantViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,11 +42,8 @@ class ViewTenantsFragment : Fragment() {
             }
         }
 
-        val tenants = TenantRepository.tenants
-        binding.allTenantsTextView.text = if (tenants.isEmpty()) {
-            getString(R.string.no_tenants)
-        } else {
-            tenants.joinToString("\n\n") { it.summary() }
+        viewModel.allTenantsText.observe(viewLifecycleOwner) { text ->
+            binding.allTenantsTextView.text = text
         }
     }
 
